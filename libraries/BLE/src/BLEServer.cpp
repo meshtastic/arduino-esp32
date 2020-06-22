@@ -171,7 +171,12 @@ void BLEServer::handleGATTServerEvent(esp_gatts_cb_event_t event, esp_gatt_if_t 
 				m_pServerCallbacks->onConnect(this);
 				m_pServerCallbacks->onConnect(this, param);			
 			}
-			m_connectedCount++;   // Increment the number of connected devices count.	
+			m_connectedCount++;   // Increment the number of connected devices count.
+
+			// The BLE system software implicitly stops advertising once someone connects - we don't want that
+			// because if a client walks away (without even gracefully disconnecting), we will never again restart
+			// advertising
+			startAdvertising();
 			break;
 		} // ESP_GATTS_CONNECT_EVT
 
@@ -215,7 +220,6 @@ void BLEServer::handleGATTServerEvent(esp_gatts_cb_event_t event, esp_gatt_if_t 
                 m_connectedCount--;                          // Decrement the number of connected devices count.
             }
 
-			startAdvertising();
             break;
 		} // ESP_GATTS_DISCONNECT_EVT
 
