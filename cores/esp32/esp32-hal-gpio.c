@@ -278,7 +278,7 @@ extern void __attachInterrupt(uint8_t pin, voidFuncPtr userFunc, int intr_type) 
     __attachInterruptFunctionalArg(pin, (voidFuncPtrArg)userFunc, NULL, intr_type, false);
 }
 
-extern void __detachInterrupt(uint8_t pin)
+extern void IRAM_ATTR __detachInterrupt(uint8_t pin)
 {
     esp_intr_disable(gpio_intr_handle);
     if (__pinInterruptHandlers[pin].functional && __pinInterruptHandlers[pin].arg)
